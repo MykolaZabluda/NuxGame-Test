@@ -30,31 +30,29 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      username: "",
-      phone: "",
+      username: '',
+      phone: '',
       error: null,
     };
   },
   methods: {
     async login() {
       try {
-        const { data: users } = await axios.get("https://jsonplaceholder.typicode.com/users");
-        const user = users.find(
-            (u) => u.username === this.username && u.phone === this.phone
-        );
+        const { data: users } = await axios.get('https://jsonplaceholder.typicode.com/users');
+        const user = users.find(({ username, phone }) => username === this.username && phone === this.phone);
         if (user) {
-          localStorage.setItem("loggedInUser", JSON.stringify(user));
-          this.$router.push("/data");
+          localStorage.setItem('loggedInUser', JSON.stringify(user));
+          this.$router.push('/data');
         } else {
-          this.error = "Invalid username or phone number.";
+          this.error = 'Invalid username or phone number.';
         }
       } catch (err) {
-        this.error = "Failed to connect to the server.";
+        this.error = 'Failed to connect to the server.';
       }
     },
   },

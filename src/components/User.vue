@@ -77,23 +77,26 @@ export default {
       return [...new Set(this.todos.map(todo => todo.userId))];
     },
     filteredTodos() {
+      const { status, userId, search } = this.filters;
+      const lowerCaseSearch = search.toLowerCase();
+
       return this.todos.filter(todo => {
-        const matchesStatus =
-            this.filters.status === 'all' ||
-            (this.filters.status === 'completed' && todo.completed) ||
-            (this.filters.status === 'uncompleted' && !todo.completed) ||
-            (this.filters.status === 'favorites' && this.favorites.includes(todo.id));
+        const isFavorite = this.favorites.includes(todo.id);
 
-        const matchesUserId =
-            this.filters.userId === 'all' || todo.userId === parseInt(this.filters.userId);
+        const matchesStatus = {
+          all: true,
+          completed: todo.completed,
+          uncompleted: !todo.completed,
+          favorites: isFavorite,
+        }[status];
 
-        const matchesSearch = todo.title
-            .toLowerCase()
-            .includes(this.filters.search.toLowerCase());
+        const matchesUserId = userId === 'all' || todo.userId === parseInt(userId);
+        const matchesSearch = todo.title.toLowerCase().includes(lowerCaseSearch);
 
         return matchesStatus && matchesUserId && matchesSearch;
       });
     },
+
   },
   methods: {
     async fetchUser() {
@@ -117,17 +120,20 @@ export default {
       localStorage.setItem('favorites', JSON.stringify(this.favorites));
     },
     async addTodo() {
-      if (!this.newTodo.userId || !this.newTodo.title) return;
+      const { userId, title } = this.newTodo;
+
+      if (!userId || !title) {
+        return;
+      }
+
       try {
-        const { data } = await axios.post('https://jsonplaceholder.typicode.com/todos', {
-          userId: this.newTodo.userId,
-          title: this.newTodo.title,
-          completed: false,
-        });
+        const body = { userId, title, completed: false };
+
+        const { data } = await axios.post('https://jsonplaceholder.typicode.com/todos', body);
+
         this.todos.push(data);
-        this.newTodo.userId = '';
-        this.newTodo.title = '';
-      } catch (err) {
+        Object.assign(this.newTodo, { userId: '', title: '' });
+      } catch (error) {
         alert('Failed to create Todo');
       }
     },
