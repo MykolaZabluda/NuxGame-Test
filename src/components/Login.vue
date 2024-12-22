@@ -1,31 +1,33 @@
 <template>
-  <div class="login-page">
-    <h2>Login</h2>
-    <form @submit.prevent="login">
-      <div>
-        <label for="username">Username:</label>
-        <input
-            id="username"
-            v-model="username"
-            type="text"
-            required
-            pattern="[a-zA-Z]+"
-            placeholder="Enter username"
-        />
-      </div>
-      <div>
-        <label for="phone">Phone Number:</label>
-        <input
-            id="phone"
-            v-model="phone"
-            type="text"
-            required
-            placeholder="Enter phone number"
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
-    <p v-if="error" class="error">{{ error }}</p>
+  <div class="login">
+    <div class="login-page">
+      <h2>Login</h2>
+      <form @submit.prevent="login">
+        <div>
+          <input
+              id="username"
+              class="login-page-input"
+              v-model="username"
+              type="text"
+              required
+              pattern="[a-zA-Z]+"
+              placeholder="Username"
+          />
+        </div>
+        <div>
+          <input
+              id="phone"
+              class="login-page-input"
+              v-model="phone"
+              type="text"
+              required
+              placeholder="Phone number"
+          />
+        </div>
+        <button class="login-page-button" type="submit">Register</button>
+      </form>
+      <p v-if="error" class="error">{{ error }}</p>
+    </div>
   </div>
 </template>
 
@@ -59,16 +61,43 @@ export default {
 };
 </script>
 
-<style>
-.login-page {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-.error {
-  color: red;
+<style lang="scss">
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background: #545454;
+
+  &-page {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    background-color: #c3c3c3;
+
+    &-input {
+      margin: 7px 0;
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    &-button {
+      margin: 7px 0;
+      width: 100%;
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid #519945;
+      background: #519945;
+      color: #fff;
+    }
+
+    .error {
+      color: red;
+    }
+  }
 }
 </style>
